@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* --- KONFIGURASI PRINT SECTOR7LAB --- */
+@media screen {
+  .hidden-print-area {
+    display: none !important;
+  }
+}
+
+@media print {
+  /* Sembunyikan semuanya tanpa terkecuali */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Munculkan kembali area struk dan semua isinya */
+  .hidden-print-area,
+  .hidden-print-area * {
+    visibility: visible !important;
+  }
+
+  /* Atur posisi struk agar di pojok kiri atas kertas */
+  .hidden-print-area {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    background: white !important;
+    display: block !important;
+  }
+
+  /* Hilangkan margin header/footer otomatis dari browser */
+  @page {
+    size: auto;
+    margin: 0mm;
+  }
+}

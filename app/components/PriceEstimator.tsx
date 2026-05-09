@@ -37,17 +37,26 @@ export default function PriceEstimator() {
 
           {/* Sisi Kanan: Daftar Harga */}
           <div className="space-y-4">
-            <div className="flex justify-between border-b border-white/10 pb-2">
-              <span className="text-gray-300">LCD Replacement</span>
-              <span className="text-[#D4AF37] font-bold">Rp {selectedDevice.lcd.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between border-b border-white/10 pb-2">
-              <span className="text-gray-300">Battery Health</span>
-              <span className="text-[#D4AF37] font-bold">Rp {selectedDevice.battery.toLocaleString()}</span>
-            </div>
+           <div className="flex justify-between border-b border-white/10 pb-2">
+  <span className="text-gray-300">Replacement LCD</span>
+  <span className="text-[#D4AF37] font-bold">
+    {selectedDevice?.lcd 
+      ? `Rp ${selectedDevice.lcd.toLocaleString('id-ID')}` 
+      : 'Select Device...'}
+  </span>
+</div>
+
+<div className="flex justify-between border-b border-white/10 pb-2">
+  <span className="text-gray-300">Battery Health</span>
+  <span className="text-[#D4AF37] font-bold">
+    {selectedDevice?.battery 
+      ? `Rp ${selectedDevice.battery.toLocaleString('id-ID')}` 
+      : 'Select Device...'}
+  </span>
+</div>
             <div className="flex justify-between border-b border-white/10 pb-2">
               <span className="text-gray-300">Housing / Backglass</span>
-              <span className="text-[#D4AF37] font-bold">Rp {selectedDevice.housing.toLocaleString()}</span>
+              <span className="text-[#D4AF37] font-bold">Rp {selectedDevice.housing.toLocaleString('id-ID')}</span>
             </div>
           </div>
         </div>

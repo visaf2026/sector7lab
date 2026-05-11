@@ -40,7 +40,7 @@ export default function Home() {
         </div>
       </section>
 
-      <TrackingStatus />
+      {/* <TrackingStatus /> */}
 
       <footer className="py-12 border-t border-white/10 text-center">
         <p className="text-gray-600 text-sm tracking-[0.2em]">

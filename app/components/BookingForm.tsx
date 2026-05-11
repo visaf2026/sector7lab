@@ -1,5 +1,6 @@
 "use client";
 
+import { supabase } from "@/app/lib/supabase";
 import { useState } from "react";
 
 export default function BookingForm() {
@@ -13,35 +14,56 @@ export default function BookingForm() {
 
   const [lastBookingId, setLastBookingId] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSaveBooking = (e: React.FormEvent) => {
+  const handleSaveBooking = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    // Membuat ID Unik
-    const bookingId = `ST7-${Math.floor(Math.random() * 10000)}`;
+    // 1. Membuat ID Unik
+    const bookingId = `ST7-${Math.floor(1000 + Math.random() * 9000)}`;
     
-    const newBooking = {
-      ...formData,
-      id: bookingId,
-      status: "Pending",
-      createdAt: new Date().toISOString()
-    };
-
-    // Simpan ke LocalStorage
     try {
+      // 2. SIMPAN KE SUPABASE (Database Cloud)
+      const { error } = await supabase
+        .from('service_bookings')
+        .insert([
+          { 
+            booking_id: bookingId,
+            name: formData.name,
+            phone: formData.phone,
+            device_model: formData.deviceModel,
+            issue: formData.issue,
+            status: 'PENDING'
+          }
+        ]);
+
+      if (error) throw error;
+
+      // 3. Simpan ke LocalStorage (Sebagai Cadangan di Browser)
+      const newBooking = {
+        ...formData,
+        id: bookingId,
+        status: "Pending",
+        createdAt: new Date().toISOString()
+      };
       const existingBookings = JSON.parse(localStorage.getItem("service_bookings") || "[]");
       localStorage.setItem("service_bookings", JSON.stringify([...existingBookings, newBooking]));
       
+      // Berhasil
       setLastBookingId(bookingId);
       setShowSuccess(true);
-    } catch (error) {
-      console.error("Gagal menyimpan data:", error);
-      alert("Terjadi kesalahan saat menyimpan data.");
+
+    } catch (error: any) {
+      console.error("Gagal menyimpan data:", error.message);
+      alert("Gagal terhubung ke Database. Coba periksa koneksi internet Anda.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -62,9 +84,6 @@ export default function BookingForm() {
         </h2>
 
         {showSuccess ? (
-          /* ============================================================
-             TAMPILAN SUKSES (SETELAH KLIK CONFIRM)
-             ============================================================ */
           <div className="p-8 border border-[#D4AF37] bg-[#D4AF37]/5 text-center animate-in fade-in duration-500">
             <h3 className="text-[#D4AF37] font-bold text-2xl mb-4 uppercase tracking-widest">Booking Registered!</h3>
             <p className="text-gray-300 mb-2 text-sm">Nomor Tracking Anda:</p>
@@ -98,7 +117,6 @@ export default function BookingForm() {
               </button>
             </div>
 
-            {/* --- AREA STRUK (TERSEMBUNYI DI LAYAR, MUNCUL SAAT PRINT) --- */}
             <div className="hidden-print-area">
               <div className="receipt-container p-6 text-black bg-white font-mono text-[12px] leading-tight w-[80mm] mx-auto text-left border border-gray-200">
                 <div className="text-center border-b border-dashed border-black pb-3 mb-3">
@@ -128,7 +146,7 @@ export default function BookingForm() {
 
                 <div className="text-[9px] leading-tight mb-6">
                   <p className="font-bold mb-1 italic">SYARAT & KETENTUAN:</p>
-                  <p>1. Unit tidak diambil {" > "} 30 hari di luar tanggung jawab kami.</p>
+                  <p>1. Unit tidak diambil {">"} 30 hari di luar tanggung jawab kami.</p>
                   <p>2. Backup data Anda. Data hilang bukan tanggung jawab kami.</p>
                   <p>3. Garansi hanya berlaku pada sparepart yang diganti.</p>
                   <p>4. Segel rusak atau terbongkar = Garansi Hangus.</p>
@@ -145,9 +163,6 @@ export default function BookingForm() {
             </div>
           </div>
         ) : (
-          /* ============================================================
-             TAMPILAN FORM (SEBELUM BERHASIL)
-             ============================================================ */
           <form onSubmit={handleSaveBooking} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <input
@@ -188,15 +203,15 @@ export default function BookingForm() {
             ></textarea>
             <button
               type="submit"
-              className="w-full bg-[#D4AF37] text-black font-bold py-5 hover:bg-[#b8962d] transition-all uppercase tracking-[0.2em] shadow-lg"
+              disabled={isSubmitting}
+              className="w-full bg-[#D4AF37] text-black font-bold py-5 hover:bg-[#b8962d] transition-all uppercase tracking-[0.2em] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Konfirmasi Booking
+              {isSubmitting ? "Processing..." : "Konfirmasi Booking"}
             </button>
           </form>
         )}
       </div>
 
-      {/* --- CSS KHUSUS PRINT --- */}
       <style jsx global>{`
         @media screen {
           .hidden-print-area { display: none !important; }

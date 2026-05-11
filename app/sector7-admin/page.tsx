@@ -1,88 +1,130 @@
-"use client";
-import { useState, useEffect } from "react";
+'use client'
+
+import { useEffect, useState } from 'react'
+import { supabase } from '@/app/lib/supabase'
 
 export default function AdminDashboard() {
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [isMounted, setIsMounted] = useState(false); // Tambahkan ini
+  const [bookings, setBookings] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  // 1. Pastikan komponen sudah terpasang di browser
-  useEffect(() => {
-    setIsMounted(true);
-    const savedData = localStorage.getItem("service_bookings");
-    if (savedData) setBookings(JSON.parse(savedData));
-  }, []);
-
-  // 2. Fungsi Update Status
-  const updateStatus = (id: string, newStatus: string) => {
-    const updated = bookings.map((b) => 
-      b.id === id ? { ...b, status: newStatus } : b
-    );
-    setBookings(updated);
-    localStorage.setItem("service_bookings", JSON.stringify(updated));
-    alert(`Status Order ${id} berhasil diubah ke: ${newStatus}`);
-  };
-
-  // 3. Jika belum mounted, jangan render apapun dulu untuk menghindari error hydration
-  if (!isMounted) {
-    return <div className="min-h-screen bg-black" />; 
+  const fetchBookings = async () => {
+    try {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('service_bookings')
+        .select('*')
+        .order('created_at', { ascending: false })
+      if (error) throw error
+      setBookings(data || [])
+    } catch (error) {
+      console.error('Error:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  return (
-    <div className="min-h-screen bg-black text-white p-8">
-      {/* ... (Sisanya sama seperti kodingan sebelumnya) ... */}
-      <h1 className="text-[#D4AF37] text-3xl font-bold mb-8 uppercase tracking-widest border-b border-[#D4AF37] pb-4">
-        Sector7Lab - Admin Panel
-      </h1>
+  // FUNGSI BARU: Update Status ke Supabase
+  const updateStatus = async (id: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('service_bookings')
+        .update({ status: newStatus })
+        .eq('id', id) // Mencari data berdasarkan ID
+
+      if (error) throw error
       
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-white/10">
-          <thead>
-            <tr className="bg-white/5 text-[#D4AF37]">
-              <th className="p-4 border border-white/10">ID</th>
-              <th className="p-4 border border-white/10">Customer</th>
-              <th className="p-4 border border-white/10">Device</th>
-              <th className="p-4 border border-white/10">Current Status</th>
-              <th className="p-4 border border-white/10">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.length > 0 ? (
-              bookings.map((b) => (
-                <tr key={b.id} className="text-center hover:bg-white/5 transition-all">
-                  <td className="p-4 border border-white/10 font-mono">{b.id}</td>
-                  <td className="p-4 border border-white/10">{b.name}</td>
-                  <td className="p-4 border border-white/10">{b.deviceModel}</td>
-                  <td className="p-4 border border-white/10">
-                    <span className="px-3 py-1 bg-[#D4AF37]/20 text-[#D4AF37] rounded-full text-xs">
-                      {b.status}
-                    </span>
-                  </td>
-                  <td className="p-4 border border-white/10 space-x-2">
-                    <button 
-                      onClick={() => updateStatus(b.id, "PROSES")}
-                      className="bg-blue-600 px-3 py-1 text-xs rounded hover:bg-blue-700"
-                    >
-                      Set Proses
-                    </button>
-                    <button 
-                      onClick={() => updateStatus(b.id, "SELESAI")}
-                      className="bg-green-600 px-3 py-1 text-xs rounded hover:bg-green-700"
-                    >
-                      Set Selesai
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="p-10 text-gray-500 italic text-center">
-                  Belum ada data booking yang masuk.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      // Refresh data di layar setelah berhasil update
+      fetchBookings() 
+      alert(`Status berhasil diubah ke ${newStatus}`)
+    } catch (error) {
+      console.error('Error update:', error)
+      alert('Gagal update status')
+    }
+  }
+
+  useEffect(() => {
+    fetchBookings()
+  }, [])
+
+  return (
+    <div className="p-8 bg-slate-900 min-h-screen text-white">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Sector7Lab Admin Dashboard</h1>
+        <button onClick={fetchBookings} className="bg-slate-700 px-4 py-2 rounded hover:bg-slate-600">
+          Refresh Data
+        </button>
       </div>
+      
+      {loading ? (
+        <p>Memuat data...</p>
+      ) : (
+        <div className="overflow-x-auto bg-slate-800 rounded-lg border border-slate-700">
+          <table className="w-full text-left">
+           <thead>
+  <tr className="bg-slate-700/50">
+    <th className="p-4">Pelanggan & Unit</th>
+    <th className="p-4">WhatsApp</th> {/* Kolom Baru */}
+    <th className="p-4">Kendala</th>
+    <th className="p-4">Status</th>
+    <th className="p-4 text-center">Aksi</th>
+  </tr>
+</thead>
+<tbody>
+  {bookings.map((item: any) => (
+    <tr key={item.id} className="border-b border-slate-700 hover:bg-slate-800/50">
+      <td className="p-4">
+        <div className="font-bold text-white">{item.name}</div>
+        <div className="text-xs text-cyan-400 font-mono">{item.booking_id}</div>
+        <div className="text-[10px] text-slate-400">{item.device_model}</div>
+      </td>
+      
+      {/* KOLOM WHATSAPP DENGAN TOMBOL OTOMATIS */}
+      <td className="p-4">
+        <a 
+          href={`https://wa.me/${item.phone?.replace(/[^0-9]/g, '')}`} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-green-400 hover:text-green-300 flex items-center gap-1 text-sm font-medium"
+        >
+          <span className="bg-green-900/30 px-2 py-1 rounded border border-green-800">
+            {item.phone} ↗
+          </span>
+        </a>
+      </td>
+
+      <td className="p-4 text-sm text-slate-300">{item.issue}</td>
+      
+      <td className="p-4">
+        <span className={`px-2 py-1 rounded text-[10px] font-bold ${
+          item.status === 'DONE' ? 'bg-green-900 text-green-300' : 
+          item.status === 'CANCEL' ? 'bg-red-900 text-red-300' : 'bg-yellow-900 text-yellow-300'
+        }`}>
+          {item.status}
+        </span>
+      </td>
+
+      <td className="p-4">
+        <div className="flex justify-center gap-2">
+          <button 
+            onClick={() => updateStatus(item.id, 'DONE')}
+            className="bg-green-600 hover:bg-green-500 text-white text-[10px] px-2 py-1 rounded"
+          >
+            Selesai
+          </button>
+          <button 
+            onClick={() => updateStatus(item.id, 'CANCEL')}
+            className="bg-red-600 hover:bg-red-500 text-white text-[10px] px-2 py-1 rounded"
+          >
+            Batal
+          </button>
+        </div>
+      </td>
+    </tr>
+  ))}
+</tbody>
+          </table>
+        </div>
+      )}
     </div>
-  );
+  )
 }

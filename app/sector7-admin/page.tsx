@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/app/lib/supabase'
 
 export default function AdminDashboard() {
-  const [bookings, setBookings] = useState([])
+  const [bookings, setBookings] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   const fetchBookings = async () => {

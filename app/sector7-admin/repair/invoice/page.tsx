@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function InvoicePage() {
   const [completedJobs, setCompletedJobs] = useState([]);
-  const [invoices, setInvoices] = useState([]);
+  const [invoices, setInvoices] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
 
   // State Pengendali Utama Kasir Aktif

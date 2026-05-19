@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 export default function ProductPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
 
   // 1. LOAD DATA DARI BROWSER SAAT PERTAMA KALI DIBUKA
   useEffect(() => {

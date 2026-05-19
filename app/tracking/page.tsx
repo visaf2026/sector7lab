@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/app/lib/supabase";
-import Link from "next/link"; // Tambahkan ini untuk navigasi balik
+import Link from "next/link";
 
 export default function TrackingPage() {
   const [searchId, setSearchId] = useState("");
@@ -10,33 +9,45 @@ export default function TrackingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleTrack = async (e: React.FormEvent) => {
+  const handleTrack = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setBookingData(null);
 
-    try {
-      const { data, error: fetchError } = await supabase
-        .from("bookings")
-        .select("*")
-        .eq("id", searchId)
-        .single();
+    // Simulasi loading sebentar biar keren
+    setTimeout(() => {
+      try {
+        // Ambil data dari LocalStorage (Data dari halaman Admin)
+        const savedData = localStorage.getItem("sector7_services");
+        
+        if (savedData) {
+          const services = JSON.parse(savedData);
+          
+          // Cari data yang ID-nya cocok (ID di admin pake format S7-xxxx)
+          const found = services.find(
+            (s: any) => s.id.toLowerCase() === searchId.toLowerCase()
+          );
 
-      if (fetchError) throw new Error("ID tidak ditemukan. Silakan cek kembali.");
-      setBookingData(data);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+          if (found) {
+            setBookingData(found);
+          } else {
+            setError("ID Tracking tidak ditemukan. Silakan cek kembali nomor ID Anda.");
+          }
+        } else {
+          setError("Belum ada data servis yang terdaftar di sistem.");
+        }
+      } catch (err) {
+        setError("Terjadi kesalahan saat membaca data.");
+      } finally {
+        setLoading(false);
+      }
+    }, 800);
   };
 
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-white">
-      {/* Jika Navbar global belum muncul, kamu bisa selipkan navbar manual di sini */}
-      
-      <div className="max-w-lg mx-auto pt-40 px-4">
+      <div className="max-w-lg mx-auto pt-40 px-4 pb-20">
         <div className="bg-[#1a1a1a] border border-[#d4af37]/30 rounded-2xl shadow-2xl overflow-hidden p-8">
           
           {/* Header */}
@@ -54,14 +65,14 @@ export default function TrackingPage() {
           <form onSubmit={handleTrack} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-[#d4af37] mb-2">
-                Nomor ID Booking
+                Nomor ID Tracking
               </label>
               <input
                 type="text"
-                placeholder="Masukkan ID (contoh: 102)"
+                placeholder="Masukkan ID (contoh: S7-1234)"
                 value={searchId}
                 onChange={(e) => setSearchId(e.target.value)}
-                className="w-full px-4 py-3 bg-[#262626] border border-gray-700 rounded-xl focus:ring-2 focus:ring-[#d4af37] focus:border-transparent outline-none transition-all text-white placeholder-gray-500"
+                className="w-full px-4 py-3 bg-[#262626] border border-gray-700 rounded-xl focus:ring-2 focus:ring-[#d4af37] focus:border-transparent outline-none transition-all text-white placeholder-gray-500 font-mono"
                 required
               />
             </div>
@@ -83,31 +94,35 @@ export default function TrackingPage() {
 
           {/* Result Card */}
           {bookingData && (
-            <div className="mt-10 animate-fade-in">
+            <div className="mt-10 animate-in fade-in duration-500">
               <div className="p-6 bg-gradient-to-br from-[#262626] to-[#1a1a1a] border border-[#d4af37]/50 rounded-xl shadow-inner">
                 <h2 className="text-[#d4af37] font-bold mb-4 flex items-center gap-2">
                   <span className="w-2 h-2 bg-[#d4af37] rounded-full animate-ping"></span>
-                  DETAIL STATUS
+                  DETAIL STATUS UNIT
                 </h2>
                 
                 <div className="space-y-4 text-sm">
                   <div className="flex justify-between border-b border-gray-700 pb-2">
+                    <span className="text-gray-400">ID Tracking</span>
+                    <span className="font-bold text-[#d4af37]">{bookingData.id}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-gray-700 pb-2">
                     <span className="text-gray-400">Nama Pelanggan</span>
-                    <span className="font-semibold">{bookingData.nama_lengkap}</span>
+                    <span className="font-semibold">{bookingData.customer}</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-700 pb-2">
                     <span className="text-gray-400">Tipe iPhone</span>
-                    <span className="font-semibold text-[#d4af37]">{bookingData.tipe_iphone}</span>
+                    <span className="font-semibold">{bookingData.device}</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-700 pb-2">
                     <span className="text-gray-400">Status Progress</span>
                     <span className="px-3 py-1 bg-[#d4af37] text-black text-[10px] font-black rounded-full uppercase">
-                      {bookingData.status || "DITERIMA"}
+                      {bookingData.status}
                     </span>
                   </div>
                   <div className="pt-2">
-                    <span className="text-gray-400 block mb-1">Update Kerusakan:</span>
-                    <p className="italic text-gray-300">"{bookingData.kerusakan}"</p>
+                    <span className="text-gray-400 block mb-1">Diagnosa Kerusakan:</span>
+                    <p className="italic text-gray-300">"{bookingData.issue}"</p>
                   </div>
                 </div>
               </div>

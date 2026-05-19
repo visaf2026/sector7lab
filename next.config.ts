@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Hanya config dasar agar tidak crash
+  devIndicators: {
+    appIsrStatus: false,
+  },
 };
 
 export default nextConfig;

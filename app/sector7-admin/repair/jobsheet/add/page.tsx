@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 export default function AddJobsheetPage() {
   const router = useRouter();
   
-  const [customers, setCustomers] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [jobsheets, setJobsheets] = useState([]);
+  // BYPASS: Berikan tipe <any[]> agar TypeScript meloloskan pembacaan data array lokal
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
+  const [jobsheets, setJobsheets] = useState<any[]>([]);
   
   const [form, setForm] = useState({
     location: "Sector 7 - Utama",
@@ -36,12 +37,15 @@ export default function AddJobsheetPage() {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // JUMPER: Cari data customer dengan pengaman tipe data fleksibel
     const selectedCustData = customers.find((c: any) => c.name === form.customer);
 
     const newJob = { 
       id: `JOB-${Date.now().toString().slice(-4)}`, 
       date: new Date().toLocaleDateString(), 
-      phone: selectedCustData ? selectedCustData.phone : "No WA",
+      // AMAN: Jika selectedCustData ada, ambil HP-nya. Jika undefined/hampa, langsung lempar teks "No WA"
+      phone: selectedCustData && selectedCustData.phone ? selectedCustData.phone : "No WA",
       ...form 
     };
     
@@ -63,7 +67,7 @@ export default function AddJobsheetPage() {
     <div className="p-6 text-white max-w-5xl mx-auto pb-20">
       <div className="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
         <h1 className="text-2xl font-bold italic tracking-tighter">ADD NEW <span className="text-[#d4af37]">JOBSHEET</span></h1>
-        <button onClick={() => router.back()} className="text-gray-500 text-sm hover:text-white">Kembali</button>
+        <button type="button" onClick={() => router.back()} className="text-gray-500 text-sm hover:text-white">Kembali</button>
       </div>
 
       <form onSubmit={handleSave} className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
@@ -72,7 +76,7 @@ export default function AddJobsheetPage() {
             <h3 className="text-[#d4af37] font-bold text-sm uppercase tracking-widest mb-4">Customer & Device</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] text-gray-500 font-bold uppercase">Lokasi Cabang</label>
+                <label className="text-[10px] text-gray-400 font-bold uppercase">Lokasi Cabang</label>
                 <select className="bg-black/40 border border-white/10 p-3 rounded-xl text-white text-sm" 
                   value={form.location} onChange={(e) => setForm({...form, location: e.target.value})}>
                   <option>Sector 7 - Utama</option>
@@ -80,7 +84,7 @@ export default function AddJobsheetPage() {
                 </select>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] text-gray-500 font-bold uppercase">Customer Data</label>
+                <label className="text-[10px] text-gray-400 font-bold uppercase">Customer Data</label>
                 <select required className="bg-black/40 border border-white/10 p-3 rounded-xl text-white text-sm"
                   onChange={(e) => setForm({...form, customer: e.target.value})}>
                   <option value="">-- Pilih Customer --</option>
@@ -88,7 +92,7 @@ export default function AddJobsheetPage() {
                 </select>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] text-gray-500 font-bold uppercase">Brand</label>
+                <label className="text-[10px] text-gray-400 font-bold uppercase">Brand</label>
                 <select required className="bg-black/40 border border-white/10 p-3 rounded-xl text-white text-sm"
                   onChange={(e) => setForm({...form, brand: e.target.value})}>
                   <option value="">-- Pilih Brand --</option>
@@ -96,17 +100,16 @@ export default function AddJobsheetPage() {
                 </select>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] text-gray-500 font-bold uppercase">Device Name</label>
+                <label className="text-[10px] text-gray-400 font-bold uppercase">Device Name</label>
                 <input placeholder="Contoh: iPhone 13 Pro" className="bg-black/40 border border-white/10 p-3 rounded-xl text-white text-sm" 
                   onChange={(e) => setForm({...form, device: e.target.value})}/>
               </div>
               <div className="flex flex-col gap-2 col-span-2">
-                <label className="text-[10px] text-gray-500 font-bold uppercase">Model / Variant</label>
+                <label className="text-[10px] text-gray-400 font-bold uppercase">Model / Variant</label>
                 <input placeholder="Contoh: 256GB / iBox" className="bg-black/40 border border-white/10 p-3 rounded-xl text-white text-sm" 
                   onChange={(e) => setForm({...form, model: e.target.value})}/>
               </div>
               
-              {/* INPUT BARU: JENIS KERUSAKAN */}
               <div className="flex flex-col gap-2 col-span-2">
                 <label className="text-[10px] text-[#d4af37] font-bold uppercase">Jenis Kerusakan</label>
                 <textarea 
@@ -126,8 +129,8 @@ export default function AddJobsheetPage() {
                 <button type="button" key={item} onClick={() => handleChecklist(item)}
                   className={`p-3 rounded-xl border text-[10px] font-bold uppercase transition-all ${
                     form.checklist[item as keyof typeof form.checklist] 
-                    ? "bg-[#d4af37] border-[#d4af37] text-black" 
-                    : "bg-black/20 border-white/10 text-gray-500"
+                      ? "bg-[#d4af37] border-[#d4af37] text-black" 
+                      : "bg-black/20 border-white/10 text-gray-500"
                   }`}>
                   {item.replace('_', ' ')}
                 </button>
@@ -152,12 +155,13 @@ export default function AddJobsheetPage() {
             <input placeholder="Nama Teknisi" className="w-full bg-black/40 border border-white/10 p-3 rounded-xl text-white text-sm" 
               onChange={(e) => setForm({...form, technician: e.target.value})}/>
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] text-gray-500 font-bold uppercase">Estimasi Biaya</label>
+              <label className="text-[10px] text-gray-400 font-bold uppercase">Estimasi Biaya</label>
+              {/* FIXED: Pengaman anti NaN jika form dikosongkan */}
               <input type="number" className="bg-black/40 border border-white/10 p-3 rounded-xl text-[#d4af37] font-bold text-lg" 
-                onChange={(e) => setForm({...form, estimate: parseInt(e.target.value)})}/>
+                onChange={(e) => setForm({...form, estimate: parseInt(e.target.value) || 0})}/>
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] text-gray-500 font-bold uppercase">Status Awal</label>
+              <label className="text-[10px] text-gray-400 font-bold uppercase">Status Awal</label>
               <select className="bg-black/40 border border-white/10 p-3 rounded-xl text-white text-sm"
                 onChange={(e) => setForm({...form, status: e.target.value})}>
                 <option>Proses</option>

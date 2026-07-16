@@ -2,9 +2,9 @@
 
 // 🟢 STEP 1: DEKLARASI PROPS TYPESCRIPT AGAR BISA TERIMA LEMPARAN DATA DARI PAGE UTAMA
 interface FooterProps {
-  storeName: string;
-  address: string;
-  phone: string;
+  storeName?: string;
+  address?: string;
+  phone?: string;
 }
 
 export default function Footer({ storeName, address, phone }: FooterProps) {

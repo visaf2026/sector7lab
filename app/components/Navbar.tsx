@@ -12,7 +12,7 @@ export default function Navbar() {
         {/* ZONA 1: KIRI (LOGO) */}
         <div className="w-full flex justify-start items-center">
           <Link href="/" className="text-xl md:text-2xl font-black text-[#d4af37] tracking-tighter whitespace-nowrap">
-            SECTOR7<span className="text-white">LAB</span>
+           Visiofix<span className="text-white"> System</span>
           </Link>
         </div>
 

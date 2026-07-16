@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { supabase } from "../lib/supabase";// 👈 Diubah ke relative path agar tidak error 'Module not found'
+import { supabase } from "../../lib/supabase";// 👈 Diubah ke relative path agar tidak error 'Module not found'
 
 export default function TrackingPage() {
   const [searchId, setSearchId] = useState("");

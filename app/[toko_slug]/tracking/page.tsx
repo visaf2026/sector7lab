@@ -2,81 +2,61 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { supabase } from "../../lib/supabase";// 👈 Diubah ke relative path agar tidak error 'Module not found'
+import { useParams } from "next/navigation"; // 🟢 1. IMPORT PARAMETER URL BROWSER
+import { supabase } from "../../lib/supabase"; 
 
 export default function TrackingPage() {
+  const params = useParams(); // 🟢 2. AMBIL URL SLUG AKTIF
+  
   const [searchId, setSearchId] = useState("");
   const [bookingData, setBookingData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-const handleTrack = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchId.trim()) return;
+ const handleTrack = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!searchId.trim()) return;
 
-    setLoading(true);
-    setError("");
-    setBookingData(null);
+  setLoading(true);
+  setError("");
+  setBookingData(null);
 
-    try {
-      const parts = searchId.split("-");
-      
-      if (parts.length < 2) {
-        throw new Error("Format ID salah! Gunakan format PREFIX-NOMOR (Contoh: VSF-878)");
-      }
+  try {
+    // 🟢 RACIKAN SAKTI: Hapus tulisan "VSF-" atau "JOB-" (case-insensitive) dan ambil angkanya saja
+    // Contoh: "VSF-880" atau "vsf-880" -> berubah murni menjadi "880"
+    const cleanIdForQuery = searchId
+      .toUpperCase()
+      .replace("VSF-", "")
+      .replace("JOB-", "")
+      .trim();
 
-      const prefix = parts[0].toUpperCase().trim(); // "VSF" atau "JOB"
-      const jobsheetNum = parts.slice(1).join("-").trim(); // "878"
-
-      // 1. Validasi apakah nomor nota berupa angka valid
-      if (isNaN(Number(jobsheetNum))) {
-        throw new Error("Nomor nota harus berupa angka murni setelah tanda strip!");
-      }
-
-      // 2. Tentukan bos konternya berdasarkan awalan kode
-      let ownerUsername = "";
-      if (prefix === "VSF" || prefix === "JOB") {
-        ownerUsername = "sector7lab"; 
-      } else if (prefix === "RAJA") {
-        ownerUsername = "rajarepair"; 
-      } else {
-        throw new Error(`Toko dengan kode "${prefix}" belum terdaftar di Visiofix System.`);
-      }
-
-      // 3. Eksekusi query bersih: Tembak langsung ID angka eksak
-      const { data, error: dbError } = await supabase
-        .from("jobsheets")
-        .select("*")
-        .eq("owner_username", ownerUsername)
-        .eq("id", Number(jobsheetNum)) // Diubah jadi Number murni agar match dengan int8
-        .maybeSingle(); // Menggunakan maybeSingle agar tidak crash jika kosong
-
-      if (dbError) {
-        console.error("Database Error:", dbError);
-        throw new Error("Terjadi masalah saat membaca data dari server.");
-      }
-
-      if (!data) {
-        throw new Error(`ID Tracking ${searchId.toUpperCase()} tidak ditemukan di sistem konter.`);
-      }
-
-      // 4. Petakan data ke UI dengan aman
-      setBookingData({
-        id: searchId.toUpperCase(),
-        customer: data.customerName || data.customer_name || "Pelanggan",
-        device: `${data.brand || ""} ${data.deviceModel || ""}`.trim() || "Gadget",
-        status: data.status || "Proses",
-        issue: data.problem || "-",
-        cost: data.estimatedPrice || 0,
-        notes: data.notes || ""
-      });
-
-    } catch (err: any) {
-      setError(err.message || "Terjadi kesalahan saat mencari data.");
-    } finally {
+    // Pastikan hasil pembersihan adalah angka valid
+    if (isNaN(Number(cleanIdForQuery))) {
       setLoading(false);
+      return setError("Format ID Tracking tidak valid, Bosku! Gunakan format VSF-Angka.");
     }
-  };
+
+    // Tembak ke Supabase menggunakan ID murni yang sudah dibersihkan
+    const { data: jobData, error: dbError } = await supabase
+      .from("jobsheets")
+      .select("*")
+      .eq("id", parseInt(cleanIdForQuery)) // 🟢 Sekarang mencari angka 880 murni di kolom bigint/integer!
+      .single();
+
+    if (dbError || !jobData) {
+      setError(`ID Tracking VSF-${cleanIdForQuery} tidak ditemukan di sistem konter.`);
+      setLoading(false);
+      return;
+    }
+
+    // Jika data ketemu, masukkan ke state seperti biasa hhe
+    setBookingData(jobData);
+  } catch (err: any) {
+    setError("Korslet jaringan: " + err.message);
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-white">
       <div className="max-w-lg mx-auto pt-40 px-4 pb-20">
@@ -140,16 +120,18 @@ const handleTrack = async (e: React.FormEvent) => {
                   </div>
                   <div className="flex justify-between border-b border-gray-700 pb-2">
                     <span className="text-gray-400">Nama Pelanggan</span>
-                    <span className="font-semibold uppercase">{bookingData.customer}</span>
+                    <span className="font-semibold uppercase">{bookingData.customerName}</span>
                   </div>
-                  <div className="flex justify-between border-b border-gray-700 pb-2">
-                    <span className="text-gray-400">Tipe Perangkat</span>
-                    <span className="font-semibold uppercase">{bookingData.device}</span>
-                  </div>
+                  <div className="flex justify-between">
+  <span className="text-gray-400">Tipe Perangkat</span>
+  <span className="text-white font-bold">
+    {`${bookingData.brand || "IPHONE"} ${bookingData.deviceModel || bookingData.device || "XS MAX"}`.toUpperCase()}
+  </span>
+</div>
                   <div className="flex justify-between border-b border-gray-700 pb-2">
                     <span className="text-gray-400">Estimasi Biaya</span>
                     <span className="font-bold text-green-400">
-                      Rp {Number(bookingData.cost).toLocaleString("id-ID")}
+                      Rp {Number(bookingData.estimatedPrice).toLocaleString("id-ID")}
                     </span>
                   </div>
                   <div className="flex justify-between border-b border-gray-700 pb-2 items-center">
@@ -160,7 +142,7 @@ const handleTrack = async (e: React.FormEvent) => {
                   </div>
                   <div className="pt-2">
                     <span className="text-gray-400 block mb-1">Diagnosa Kerusakan:</span>
-                    <p className="italic text-gray-300">"{bookingData.issue}"</p>
+                    <p className="italic text-gray-300">"{bookingData.problem}"</p>
                   </div>
                   {bookingData.notes && (
                     <div className="pt-2 border-t border-gray-700/50">
@@ -176,7 +158,7 @@ const handleTrack = async (e: React.FormEvent) => {
 
         {/* Back Home */}
         <div className="text-center mt-8">
-          <Link href="/" className="text-gray-500 hover:text-[#d4af37] text-sm transition-colors">
+          <Link href={`/${(params?.toko_slug || params?.slug) as string}`} className="text-gray-500 hover:text-[#d4af37] text-sm transition-colors">
             ← Kembali ke Beranda
           </Link>
         </div>

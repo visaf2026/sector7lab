@@ -13,7 +13,7 @@ export default function TrackingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-const handleTrack = async (e) => {
+const handleTrack = async (e: React.FormEvent) => {
   e.preventDefault();
   if (!searchId.trim()) return;
 
@@ -47,7 +47,7 @@ const handleTrack = async (e) => {
     }
 
     // Bersihkan slug dari browser (hapus strip jika ada) -> cth: "ratu-repair" atau "raturepair" jadi "raturepair"
-    const cleanBrowserSlug = currentSlug.toLowerCase().replace(/-/g, "").trim();
+   const cleanBrowserSlug = String(currentSlug || "").toLowerCase().replace(/-/g, "").trim();
 
     // 🚀 TAHAP 1: Tarik semua store_settings untuk dicocokkan secara pintar di memori lokal
     const { data: allStores, error: storeError } = await supabase
@@ -60,10 +60,10 @@ const handleTrack = async (e) => {
     }
 
     // Cari store yang kalau dihilangkan strip-nya, hasilnya sama dengan slug di URL browser!
-    const matchedStore = allStores.find(store => {
-      const cleanDbSlug = store.slug.toLowerCase().replace(/-/g, "").trim();
-      return cleanDbSlug === cleanBrowserSlug;
-    });
+   const matchedStore = allStores.find(store => {
+  const cleanDbSlug = String(store?.slug || "").toLowerCase().replace(/-/g, "").trim();
+  return cleanDbSlug === cleanBrowserSlug;
+});
 
     if (!matchedStore) {
       setLoading(false);
@@ -86,7 +86,7 @@ const handleTrack = async (e) => {
 
     // Berhasil tembus!
     setBookingData(jobData);
-  } catch (err) {
+  } catch (err: any) {
     setError("Korslet jaringan: " + err.message);
   } finally {
     setLoading(false);

@@ -13,7 +13,7 @@ export default function TrackingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
- const handleTrack = async (e: React.FormEvent) => {
+const handleTrack = async (e) => {
   e.preventDefault();
   if (!searchId.trim()) return;
 
@@ -22,36 +22,71 @@ export default function TrackingPage() {
   setBookingData(null);
 
   try {
-    // 🟢 RACIKAN SAKTI: Hapus tulisan "VSF-" atau "JOB-" (case-insensitive) dan ambil angkanya saja
-    // Contoh: "VSF-880" atau "vsf-880" -> berubah murni menjadi "880"
+    // 1. Bersihkan prefix ID Tracking (VSF-880 -> 880)
     const cleanIdForQuery = searchId
       .toUpperCase()
       .replace("VSF-", "")
       .replace("JOB-", "")
       .trim();
 
-    // Pastikan hasil pembersihan adalah angka valid
     if (isNaN(Number(cleanIdForQuery))) {
       setLoading(false);
-      return setError("Format ID Tracking tidak valid, Bosku! Gunakan format VSF-Angka.");
+      return setError("Format ID Tracking tidak valid!");
     }
 
-    // Tembak ke Supabase menggunakan ID murni yang sudah dibersihkan
+    // 2. Deteksi slug dari URL browser
+    let currentSlug = (params?.toko_slug || params?.slug) || "";
+    if (!currentSlug && typeof window !== "undefined") {
+      const pathSegments = window.location.pathname.split("/").filter(Boolean);
+      if (pathSegments.length > 0) currentSlug = pathSegments[0];
+    }
+
+    if (!currentSlug) {
+      setLoading(false);
+      return setError("Gagal membaca identitas konter dari URL.");
+    }
+
+    // Bersihkan slug dari browser (hapus strip jika ada) -> cth: "ratu-repair" atau "raturepair" jadi "raturepair"
+    const cleanBrowserSlug = currentSlug.toLowerCase().replace(/-/g, "").trim();
+
+    // 🚀 TAHAP 1: Tarik semua store_settings untuk dicocokkan secara pintar di memori lokal
+    const { data: allStores, error: storeError } = await supabase
+      .from("store_settings")
+      .select("owner_username, slug");
+
+    if (storeError || !allStores) {
+      setLoading(false);
+      return setError("Gagal terhubung ke server database cloud.");
+    }
+
+    // Cari store yang kalau dihilangkan strip-nya, hasilnya sama dengan slug di URL browser!
+    const matchedStore = allStores.find(store => {
+      const cleanDbSlug = store.slug.toLowerCase().replace(/-/g, "").trim();
+      return cleanDbSlug === cleanBrowserSlug;
+    });
+
+    if (!matchedStore) {
+      setLoading(false);
+      return setError(`Toko dengan alamat "${currentSlug}" tidak ditemukan di database cloud.`);
+    }
+
+    // 🚀 TAHAP 2: KUNCI NOTA BERDASARKAN ID DAN OWNER YANG SAH
     const { data: jobData, error: dbError } = await supabase
       .from("jobsheets")
       .select("*")
-      .eq("id", parseInt(cleanIdForQuery)) // 🟢 Sekarang mencari angka 880 murni di kolom bigint/integer!
+      .eq("id", parseInt(cleanIdForQuery))
+      .eq("owner_username", matchedStore.owner_username)
       .single();
 
     if (dbError || !jobData) {
-      setError(`ID Tracking VSF-${cleanIdForQuery} tidak ditemukan di sistem konter.`);
+      setError(`ID Tracking VSF-${cleanIdForQuery} tidak ditemukan di sistem konter ini.`);
       setLoading(false);
       return;
     }
 
-    // Jika data ketemu, masukkan ke state seperti biasa hhe
+    // Berhasil tembus!
     setBookingData(jobData);
-  } catch (err: any) {
+  } catch (err) {
     setError("Korslet jaringan: " + err.message);
   } finally {
     setLoading(false);

@@ -222,6 +222,24 @@ export default function Home() {
         address={finalAddress}
         phone={finalPhone}
       />
+
+            {/* ========================================================================= */}
+{/* 🟢 FLOATING WHATSAPP BUTTON UNTUK PELANGGAN MITRA                       */}
+{/* ========================================================================= */}
+<a
+  href="https://wa.me/6281333329181?text=Halo%20Sector7Lab,%20saya%20mau%20tanya%20mengenai%20servis%20handphone" // 👈 Menggunakan nomor WA mitra dari data footer screenshot
+  target="_blank"
+  rel="noopener noreferrer"
+  className="fixed bottom-6 right-6 z-[9999] flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold px-4 py-3.5 rounded-full shadow-xl shadow-[#25D366]/20 transition-all duration-300 hover:scale-105 active:scale-95 group animate-bounce block"
+  style={{ animationDuration: '3s' }}
+  title="Hubungi Kami via WhatsApp"
+>
+  <svg className="w-5 h-5 fill-current transition-transform group-hover:rotate-12" viewBox="0 0 24 24">
+    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.516 2.266 2.27 3.507 5.289 3.505 8.492-.005 6.657-5.343 11.997-11.953 11.997-2.005-.001-3.973-.5-5.713-1.448L0 24zm6.59-4.846c1.6.95 3.498 1.45 5.421 1.451 5.462 0 9.904-4.44 9.909-9.904.002-2.647-1.02-5.136-2.88-6.999a9.858 9.858 0 0 0-7.006-2.884c-5.467 0-9.914 4.444-9.919 9.908-.002 1.942.508 3.84 1.479 5.468l-.982 3.585 3.678-.965zm10.435-4.088c-.304-.153-1.8-.888-2.077-.989-.278-.101-.48-.153-.681.153-.202.306-.779.989-.955 1.192-.177.204-.355.229-.659.077-1.354-.678-2.315-1.185-3.235-2.766-.242-.415.242-.385.693-1.285.076-.153.038-.287-.019-.39-.057-.102-.48-1.158-.659-1.588-.174-.419-.365-.362-.503-.369-.13-.007-.279-.008-.427-.008-.148 0-.39.055-.593.278-.203.223-.778.761-.778 1.852 0 1.091.793 2.146.904 2.298.111.152 1.56 2.382 3.78 3.339.528.228.94.364 1.263.467.53.169 1.012.145 1.393.088.425-.064 1.801-.736 2.053-1.448.254-.712.254-1.321.178-1.448-.076-.127-.278-.203-.582-.356z" />
+  </svg>
+  <span className="text-sm font-medium">Hubungi Kami</span>
+</a>
+      
     </main>
   );
 }

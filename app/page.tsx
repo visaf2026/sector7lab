@@ -229,4 +229,4 @@ export default function VisiofixCorporatePage() {
 </a>
     </main>
   );
-}
+}    

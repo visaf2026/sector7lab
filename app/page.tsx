@@ -13,7 +13,7 @@ export default function VisiofixCorporatePage() {
             VISIOFIX <span className="text-[#d4af37]">SYSTEM</span>
           </div>
           <button 
-            onClick={() => window.open("https://visiofix-pos-system.vercel.app", "_blank")} // Hubungkan ke link URL aplikasi POS/Kasir Master hhe
+            onClick={() => window.open("https://sector7-admin-core.vercel.app/", "_blank")} // Hubungkan ke link URL aplikasi POS/Kasir Master hhe
             className="bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold px-4 py-2 rounded-xl uppercase tracking-wider transition-all"
           >
             Masuk POS ➔
@@ -54,6 +54,38 @@ export default function VisiofixCorporatePage() {
               📞 Hubungi Kemitraan
             </a>
           </div>
+
+          {/* ========================================================================= */}
+{/* 🛠️ POIN 1: PREMIUM MOCKUP PREVIEW APLIKASI OPERASIONAL (DENGAN EFFECT GLOW) */}
+{/* ========================================================================= */}
+<div className="w-full max-w-4xl relative group mt-12 mx-auto">
+  
+  {/* Efek Cahaya Emas di Belakang Laptop saat di-Hover */}
+  <div className="absolute -inset-1 bg-gradient-to-r from-[#d4af37] to-[#d4af37]/30 rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200 pointer-events-none" />
+  
+  {/* Bingkai Kaca / Frame Dashboard */}
+  <div className="relative bg-[#141414] border border-white/10 p-3 rounded-2xl shadow-2xl shadow-black/80">
+    
+    {/* Dekorasi Tombol Mac/Window di Pojok Kiri Atas */}
+    <div className="flex gap-1.5 mb-3 px-2">
+      <span className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
+      <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
+      <span className="w-2.5 h-2.5 rounded-full bg-green-500/40" />
+    </div>
+
+    {/* Gambar Screenshot Dashboard POS / Papan Antrean Master */}
+    <div className="overflow-hidden rounded-xl border border-white/5 bg-[#0f0f0f] aspect-[16/9] relative">
+      <img 
+        src="/ds.png" // 👈 Taruh file screenshot POS Master di folder public/images/
+        alt="Visiofix POS Dashboard Preview"
+        className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+      />
+    </div>
+    
+  </div>
+</div>
+{/* ========================================================================= */}
+
         </div>
       </section>
 

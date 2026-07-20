@@ -39,19 +39,27 @@ export default function VisiofixCorporatePage() {
           </p>
           
           <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button 
-              onClick={() => router.push("/sector7lab")}
-              className="w-full sm:w-auto bg-[#d4af37] text-black px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-[#d4af37]/10 hover:scale-[1.02] active:scale-95 transition-all"
+            
+            {/* 🛠️ TOMBOL DEMO 1 BULAN - FIXED SMOOTH SCROLL JAVASCRIPT MASTER */}
+            <button
+              onClick={() => {
+                const elemenTarget = document.getElementById("daftar-demo");
+                if (elemenTarget) {
+                  elemenTarget.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+              }}
+              className="w-full sm:w-auto bg-[#d4af37] hover:bg-[#bfa032] text-black font-black px-8 py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all text-xs uppercase tracking-wider active:scale-95 cursor-pointer"
             >
-              🚀 Lihat Demo Web Mitra
+              🚀 DEMO 1 BULAN
             </button>
+
             <a 
-              href="https://wa.me/62853395717317?text=Halo%20Admin%20Visiofix,%20saya%20tertarik%20untuk%20berlangganan%20dan%20sewa%20sistem%20POS%20Servis" 
+              href="https://wa.me/6281333329181?text=Halo%20Admin%20Visiofix,%20saya%20tertarik%20untuk%20berlangganan%20dan%20sewa%20sistem%20POS%20Servis" 
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto border border-white/10 bg-white/5 px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-white/10 active:scale-95 transition-all text-center"
             >
-              📞 Hubungi Kemitraan
+              📞 Join Reseller
             </a>
           </div>
 
@@ -224,7 +232,7 @@ function LeadForm() {
   };
 
   return (
-    <section className="py-20 bg-[#0c0c0c] text-white border-t border-white/5">
+    <section id="daftar-demo" className="py-20 bg-[#0c0c0c] text-white border-t border-white/5">
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         
         {/* Kolom Kiri: Copywriting Promosi */}

@@ -177,11 +177,21 @@ export default function VisiofixCorporatePage() {
           </div>
         </div>
       </section>
+ {/* 1. Header Navbar Landing Page */}
+      <LandingNavbar />
+
+      {/* Section Hero / Konten Landing Page Lama Master ada di sini... */}
+
+      {/* 2. Section Tutorial Facebook Video */}
+      <TutorialSection />
+
 
       {/* ========================================================================= */}
       {/* 🟢 SISIPAN FORM REGISTRASI / COBA GRATIS ALA ACCURATE                      */}
       {/* ========================================================================= */}
       <LeadForm />
+      
+     
 
       {/* 4. FOOTER PORTAL CORPORATE */}
       <footer className="bg-black py-12 border-t border-white/5 px-6 text-xs text-gray-600">
@@ -210,13 +220,6 @@ export default function VisiofixCorporatePage() {
         <span className="text-xs uppercase tracking-wider">Contact Us</span>
       </a>
 
-      {/* 1. Header Navbar Landing Page */}
-      <LandingNavbar />
-
-      {/* Section Hero / Konten Landing Page Lama Master ada di sini... */}
-
-      {/* 2. Section Tutorial Facebook Video */}
-      <TutorialSection />
     </main>
   );
 }

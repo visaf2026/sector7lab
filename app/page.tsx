@@ -1,13 +1,18 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import LandingNavbar from "./component/landing-navbar";
+import TutorialSection from "./component/tutorial-section";
 
 export default function VisiofixCorporatePage() {
   const router = useRouter();
 
   return (
+
     <main className="w-full min-h-screen bg-[#0f0f0f] text-white overflow-x-hidden selection:bg-[#d4af37]/30">
       {/* 1. HEADER / NAVBAR PORTAL */}
+
+      
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f]/80 backdrop-blur-md border-b border-white/5 py-4 px-6">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="text-lg font-black tracking-widest text-white">
@@ -204,6 +209,14 @@ export default function VisiofixCorporatePage() {
         </svg>
         <span className="text-xs uppercase tracking-wider">Contact Us</span>
       </a>
+
+      {/* 1. Header Navbar Landing Page */}
+      <LandingNavbar />
+
+      {/* Section Hero / Konten Landing Page Lama Master ada di sini... */}
+
+      {/* 2. Section Tutorial Facebook Video */}
+      <TutorialSection />
     </main>
   );
 }

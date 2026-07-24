@@ -13,7 +13,7 @@ export default function VisiofixCorporatePage() {
       {/* 1. HEADER / NAVBAR PORTAL */}
 
       
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f]/80 backdrop-blur-md border-b border-white/5 py-4 px-6">
+      {/* <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f0f]/80 backdrop-blur-md border-b border-white/5 py-4 px-6">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="text-lg font-black tracking-widest text-white">
             VISIOFIX <span className="text-[#d4af37]">SYSTEM</span>
@@ -25,7 +25,7 @@ export default function VisiofixCorporatePage() {
             Masuk POS ➔
           </button>
         </div>
-      </header>
+      </header> */}
 
       {/* 2. HERO SECTION - PENAWARAN SOFTWARE */}
       <section className="relative pt-40 pb-24 px-6 flex items-center justify-center min-h-[85vh]">

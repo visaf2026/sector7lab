@@ -37,7 +37,7 @@ export default function LandingNavbar() {
         {/* TOMBOL ACTION (CTA) */}
         <div className="hidden md:flex items-center gap-4">
           <Link
-            href="https://sector7-admin-core.vercel.app/register"
+            href="https://app.visiofixsystem.com/login"
             className="bg-[#d4af37] hover:bg-yellow-400 text-black font-black px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#d4af37]/20 active:scale-95"
           >
             🚀 Login Sistem

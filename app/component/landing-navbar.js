@@ -87,7 +87,7 @@ export default function LandingNavbar() {
           </a>
           <div className="pt-4 border-t border-white/5">
             <Link
-              href="/login"
+              href="https://app.visiofixsystem.com/login"
               onClick={() => setIsMobileMenuOpen(false)}
               className="w-full block text-center bg-[#d4af37] text-black font-black py-3 rounded-xl text-xs uppercase tracking-wider"
             >

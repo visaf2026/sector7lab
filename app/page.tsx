@@ -19,7 +19,7 @@ export default function VisiofixCorporatePage() {
             VISIOFIX <span className="text-[#d4af37]">SYSTEM</span>
           </div>
           <button 
-            onClick={() => window.open("https://sector7-admin-core.vercel.app/", "_blank")}
+            onClick={() => window.open("https://app.visiofixsystem.com/login", "_blank")}
             className="bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold px-4 py-2 rounded-xl uppercase tracking-wider transition-all"
           >
             Masuk POS ➔

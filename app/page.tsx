@@ -59,7 +59,7 @@ export default function VisiofixCorporatePage() {
             </button>
 
             <a 
-              href="https://wa.me/6281333329181?text=Halo%20Admin%20Visiofix,%20saya%20tertarik%20untuk%20berlangganan%20dan%20sewa%20sistem%20POS%20Servis" 
+              href="https://wa.me/628888771981?text=Halo%20Admin%20Visiofix,%20saya%20tertarik%20untuk%20berlangganan%20dan%20sewa%20sistem%20POS%20Servis" 
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto border border-white/10 bg-white/5 px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-white/10 active:scale-95 transition-all text-center"
@@ -207,7 +207,7 @@ export default function VisiofixCorporatePage() {
 
       {/* 📞 TOMBOL CONTACT US TEMA EMAS LUXURY MELAYANG */}
       <a
-        href="https://wa.me/6281333329181?text=Halo%20Admin%20Visiofix,%20saya%20tertarik%20untuk%20tanya%20kemitraan%20aplikasi%20POS"
+        href="https://wa.me/628888771981?text=Halo%20Admin%20Visiofix,%20saya%20tertarik%20untuk%20tanya%20kemitraan%20aplikasi%20POS"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-[#d4af37] hover:bg-[#b8952e] text-black font-extrabold px-5 py-3.5 rounded-full shadow-xl shadow-[#d4af37]/10 border border-[#d4af37]/20 transition-all duration-300 hover:scale-105 active:scale-95 group animate-bounce"

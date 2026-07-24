@@ -15,10 +15,10 @@ export default function TutorialSection() {
     },
     {
       id: "video-2",
-      title: "Cara Kerja Live Tracking Status Servis WA",
-      desc: "Panduan bagaimana konsumen bisa melacak progres HP servisannya secara mandiri.",
-      embedUrl: "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1377312881010607&show_text=false",
-      tag: "TRACKING WA"
+      title: "Tutorial Input Data Produk",
+      desc: "Panduan bagaimana Input Edit Dan Buat Label Data Produk.",
+      embedUrl: "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1357274175788570&show_text=false",
+      tag: "Data Product"
     },
     {
       id: "video-3",

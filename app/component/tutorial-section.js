@@ -22,10 +22,10 @@ export default function TutorialSection() {
     },
     {
       id: "video-3",
-      title: "Panduan Setting Printer Thermal Bluetooth",
-      desc: "Cara menghubungkan kasir VSF POS ke printer nota thermal bluetooth di HP/Laptop.",
-      embedUrl: "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1377312881010607&show_text=false",
-      tag: "PRINTER"
+      title: "Panduan Menggunakan Jobsheet",
+      desc: "Cara Menginput data Costumer pada jobsheet.",
+      embedUrl: "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F2181033822679347&show_text=false",
+      tag: "JOBSHEET"
     }
   ];
 

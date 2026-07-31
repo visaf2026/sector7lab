@@ -26,6 +26,13 @@ export default function TutorialSection() {
       desc: "Cara Menginput data Costumer pada jobsheet.",
       embedUrl: "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F2181033822679347&show_text=false",
       tag: "JOBSHEET"
+    },
+    {
+      id: "video-4",
+      title: "Panduan Menggunakan Kasir-retail",
+      desc: "Penjelasan kasir retail.",
+      embedUrl: "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1989119518472901%2F&show_text=false",
+      tag: "KASIR RETAIL"
     }
   ];
 

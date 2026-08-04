@@ -33,6 +33,13 @@ export default function TutorialSection() {
       desc: "Penjelasan kasir retail.",
       embedUrl: "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1989119518472901%2F&show_text=false",
       tag: "KASIR RETAIL"
+    },
+    {
+      id: "video-5",
+      title: "Panduan Menggunakan Cashflow",
+      desc: "Penjelasan CASHFLOW.",
+      embedUrl: "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F2100546554200844%2F&show_text=false",
+      tag: "CASHFLOW"
     }
   ];
 
